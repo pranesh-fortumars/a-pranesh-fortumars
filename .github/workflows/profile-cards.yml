@@ -1,6 +1,11 @@
 name: Refresh animated profile cards
 
 on:
+  push:
+    paths:
+      - "scripts/render_profile_cards.py"
+      - ".github/workflows/profile-cards.yml"
+      - "data/contributions.json"
   schedule:
     - cron: "17 2 * * *"
   workflow_dispatch:
@@ -33,7 +38,9 @@ jobs:
           GITHUB_USERNAME: pranesh-fortumars
         run: |
           mkdir -p data
-          gh api graphql -f query='query($login:String!){user(login:$login){contributionsCollection(from:"2025-01-01T00:00:00Z",to:"2027-12-31T23:59:59Z"){contributionCalendar{totalContributions weeks{contributionDays{date contributionCount}}}}}}' -F login="$GITHUB_USERNAME" > data/contributions.json
+          FROM_DATE="$(date -u -d "12 months ago" +%Y-%m-%d)T00:00:00Z"
+          TO_DATE="$(date -u +%Y-%m-%d)T23:59:59Z"
+          gh api graphql -f query='query($login:String!,$from:DateTime!,$to:DateTime!){user(login:$login){contributionsCollection(from:$from,to:$to){contributionCalendar{totalContributions weeks{contributionDays{date contributionCount}}}}}}' -F login="$GITHUB_USERNAME" -F from="$FROM_DATE" -F to="$TO_DATE" > data/contributions.json
       - name: Render SVG cards
         env:
           GITHUB_USERNAME: pranesh-fortumars
