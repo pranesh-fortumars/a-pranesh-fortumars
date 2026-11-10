@@ -2,14 +2,16 @@
 
 <img src="cards/01-hero.svg" width="100%" alt="Pranesh S — Software Development Team Lead" />
 
-<a href="https://github.com/pranesh-fortumars"><img src="cards/02-links.svg" width="32.5%" alt="GitHub, LinkedIn and portfolio links" /></a>
+<a href="https://github.com/pranesh-fortumars"><img src="cards/02-github.svg" width="32.5%" alt="GitHub profile" /></a>
+<a href="https://www.linkedin.com/in/pranesh-s-ps34101136/"><img src="cards/03-linkedin.svg" width="32.5%" alt="LinkedIn profile" /></a>
+<a href="https://async-2.vercel.app/"><img src="cards/04-portfolio.svg" width="32.5%" alt="Portfolio website" /></a>
 
-<img src="cards/03-activity.svg" width="100%" alt="Monthly contributions, streak, active days and busiest day" />
-<img src="cards/04-repo-hydradragonantivirus.svg" width="100%" alt="HydraDragonAntivirus" />
-<img src="cards/05-repo-decentralized-energy-marketplace.svg" width="100%" alt="Decentralized energy marketplace" />
-<img src="cards/06-repo-hotel-management.svg" width="100%" alt="Hotel management" />
-<img src="cards/07-repo-lms.svg" width="100%" alt="Learning management system" />
-<img src="cards/08-contributions.svg" width="100%" alt="Contribution graph in cyan brand colour" />
+<img src="cards/05-activity.svg" width="100%" alt="Monthly contributions, streak, active days and busiest day" />
+<img src="cards/06-repo-hydradragonantivirus.svg" width="100%" alt="HydraDragonAntivirus" />
+<img src="cards/07-repo-ctf.svg" width="100%" alt="Capture the flag security challenges" />
+<img src="cards/08-repo-hotel-managemnt-system-latest.svg" width="100%" alt="Hotel management system" />
+<img src="cards/09-repo-lms.svg" width="100%" alt="Learning management system" />
+<img src="cards/10-contributions.svg" width="100%" alt="Contribution graph in cyan brand colour" />
 
 </div>
 
