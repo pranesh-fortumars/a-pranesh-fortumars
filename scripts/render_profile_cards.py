@@ -76,5 +76,5 @@ def main():
         col,row=(offset+i)//7,(offset+i)%7; n=int(d.get("count",0)); opacity=.08 if n==0 else .25+.75*n/maximum
         cells.append(f'<rect x="{54+col*17}" y="{82+row*18}" width="12" height="12" rx="3" fill="{CYAN}" opacity="{opacity:.2f}"><title>{d["date"]}: {n} contributions</title></rect>')
     save("08-contributions.svg",document("GitHub contribution graph in cyan brand colour",f'<text x="42" y="38" fill="{CYAN}" font-size="14" letter-spacing="4">CONTRIBUTION MATRIX // BRAND SIGNAL</text>{"".join(cells)}<text x="950" y="220" text-anchor="end" fill="{CYAN}" font-size="13">{metrics.get("total",0):,} contributions · {USER}</text>',260,7))
-    print("Rendered",len(list(OUT.glob("*.svg")),"SVG cards")
+    print("Rendered", len(list(OUT.glob("*.svg"))), "SVG cards", "(STATIC)" if STATIC else "(animated)")
 if __name__=="__main__": main()
