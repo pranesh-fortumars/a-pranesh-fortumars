@@ -8,17 +8,38 @@ from xml.sax.saxutils import escape
 ROOT=Path(__file__).resolve().parents[1]; OUT=ROOT/"cards"; DATA=ROOT/"data"/"contributions.json"
 USER=os.getenv("GITHUB_USERNAME","pranesh-fortumars"); STATIC=os.getenv("STATIC","").lower() in {"1","true","yes"}
 CYAN,PURPLE,RED="#00F0FF","#7A00FF","#FF003C"; BG,WHITE,MUTED="#05070B","#F4FAFF","#93A4B8"
-FONT="ProfileEmbedded, Geist, 'Geist Mono', Arial, sans-serif"; FONT_CSS=""
+FONT="ProfileGeist, Geist, Arial, sans-serif"; FONT_CSS=""
 def subset_font():
-    source=Path(os.getenv("PROFILE_FONT_FILE","/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
-    target=OUT/".profile-subset.woff"
-    if not source.is_file(): return ""
-    glyphs="PRANESH S Software Development Team Lead Cybersecurity AI Blockchain Cloud Full Stack GitHub Contributions January February March April May June July August September October November December 0123456789"
-    try:
-        subprocess.run(["pyftsubset",str(source),"--output-file="+str(target),"--flavor=woff","--text="+glyphs,"--layout-features=*"],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-        encoded=base64.b64encode(target.read_bytes()).decode("ascii"); target.unlink(missing_ok=True)
-        return "@font-face{font-family:ProfileEmbedded;src:url(data:font/woff;base64,"+encoded+") format('woff');}"
-    except (OSError,subprocess.CalledProcessError): return ""
+    """Subset Geist and Geist Mono variable fonts into embedded WOFF data URIs."""
+    specs = [
+        ("ProfileGeist", os.getenv("PROFILE_FONT_FILE", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")),
+        ("ProfileGeistMono", os.getenv("PROFILE_MONO_FONT_FILE", "")),
+    ]
+    glyphs = ("PRANESH S Software Development Team Lead Cybersecurity AI Blockchain "
+              "Cloud Full Stack GitHub Contributions January February March April May "
+              "June July August September October November December 0123456789")
+    css = []
+    for family, font_path in specs:
+        source = Path(font_path) if font_path else None
+        if not source or not source.is_file():
+            continue
+        target = OUT / (family.lower() + ".woff")
+        try:
+            subprocess.run([
+                "pyftsubset", str(source), "--output-file=" + str(target),
+                "--flavor=woff", "--text=" + glyphs, "--layout-features=*"
+            ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            encoded = base64.b64encode(target.read_bytes()).decode("ascii")
+            target.unlink(missing_ok=True)
+            css.append(
+                "@font-face{font-family:" + family +
+                ";src:url(data:font/woff;base64," + encoded +
+                ") format('woff');font-weight:100 900;}"
+            )
+        except (OSError, subprocess.CalledProcessError):
+            continue
+    return "".join(css)
+
 def load_metrics():
     raw=json.loads(DATA.read_text(encoding="utf-8")) if DATA.exists() else {"weeks":[],"total":0}
     if "weeks" in raw: return raw
@@ -30,7 +51,7 @@ def document(title,body,height=250,delay=0):
     .card{{animation:card-enter .8s ease-out both;animation-delay:{delay}s}}
     @media(prefers-reduced-motion:reduce){{*,*::before,*::after{{animation:none!important;transition:none!important}} animate,animateTransform,set{{display:none!important}}}}
     """
-    css=FONT_CSS+f"text{{font-family:{FONT}}}"+motion
+    css=FONT_CSS+f"text{{font-family:{FONT}}}.mono{{font-family:ProfileGeistMono, 'Geist Mono', monospace}}"+motion
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="{height}" viewBox="0 0 1000 {height}" role="img">
     <title>{escape(title)}</title><style>{css}</style>
     <defs><linearGradient id="edge"><stop stop-color="{CYAN}"/><stop offset=".55" stop-color="{PURPLE}"/><stop offset="1" stop-color="{RED}"/></linearGradient><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="{CYAN}" stroke-opacity=".06"/></pattern></defs>
